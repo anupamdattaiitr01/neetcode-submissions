@@ -1,0 +1,65 @@
+class Solution {
+    void dfs (int node, vector <int> &vis, vector <vector <int>> &adj, stack <int> &st)
+    {
+        vis[node]=1;
+        for (auto it: adj[node])
+        {
+            if (vis[it]==-1)
+            {
+                dfs (it, vis, adj, st);
+            }
+        }
+
+        st.push (node);
+    }
+
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        int n = numCourses;
+        vector <vector <int>> adj (n);
+        vector <int> ind (n);
+        vector <int> vis (n, -1);
+        for (int i =0;i<prerequisites.size();i++)
+        {
+            vector <int> tmp = prerequisites[i];
+            int u= tmp[1];
+            int v= tmp[0];
+            adj[u].push_back(v);
+            ind[v]++;
+        }
+        
+        queue <int> q;
+        vector <int> nodes;
+        for (int i =0;i<n;i++)
+        {
+            if (vis[i] ==-1 && ind[i]==0)
+            {
+                q.push (i);
+                vis[i]=1;
+                nodes.push_back(i);
+            }
+        }
+
+        while (!q.empty())
+        {
+            int node1 = q.front();
+            q.pop ();
+            for (auto it: adj[node1])
+            {
+                if (vis[it] ==-1)
+                {
+                    ind[it]--;
+                    if (ind[it] ==0)
+                    {
+                        vis[it] ==1;
+                        q.push (it);
+                        nodes.push_back(it);
+                    }
+                }
+            }
+        }
+
+        if (nodes.size() ==n) return true;
+        return false;
+    }
+};
